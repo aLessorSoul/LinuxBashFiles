@@ -1,5 +1,5 @@
 #!/bin/sh
-
+echo building k8s on $1
 echo installing java from jdk-11_linux-x64_bin.tar.gz
 mkdir -p /usr/lib/jvm
 tar -zxvf jdk-11_linux-x64_bin.tar.gz -C /usr/lib/jvm
@@ -22,9 +22,9 @@ newstr="static"
 cat /etc/sysconfig/network-scripts/ifcfg-ens33 | sed -n "s/$oldstr/$newstr/g;p"
 cat /etc/sysconfig/network-scripts/ifcfg-ens33 | sed -n 's/ONBOOT="no"/ONBOOT="yes"/g;p'
 cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-ens33
- IPADDR=$1
- NETMASK=255.255.255.0
- GATEWAY=192.168.101.2
+IPADDR=$1
+NETMASK=255.255.255.0
+GATEWAY=192.168.101.2
 EOF
 service network restart
 
@@ -39,17 +39,17 @@ yum install docker-ce -y
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
- 
+
 [kubernetes]
 
 name=Kubernetes
- 
+
 baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
 enabled=1
 gpgcheck=0
 repo_gpgcheck=0
 gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
-        http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+	http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 
 
