@@ -1,4 +1,6 @@
-#安装java
+#!/bin/sh
+
+echo installing java from jdk-11_linux-x64_bin.tar.gz
 mkdir -p /usr/lib/jvm
 tar -zxvf jdk-11_linux-x64_bin.tar.gz -C /usr/lib/jvm
 cat <<EOF >  /etc/profile
@@ -9,27 +11,29 @@ export PATH=${JAVA_HOME}/bin:$PATH
 EOF
 source /etc/profile
 
-#安装yum utils
+echo installing yum utils
 yum install -y yum-utils
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 yum makecache
 
-#fix static IP
-#!/bin/bash
+echo fix static IP
 oldstr="dhcp"
 newstr="static"
 cat /etc/sysconfig/network-scripts/ifcfg-ens33 | sed -n "s/$oldstr/$newstr/g;p"
 cat /etc/sysconfig/network-scripts/ifcfg-ens33 | sed -n 's/ONBOOT="no"/ONBOOT="yes"/g;p'
 cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-ens33
- IPADDR=192.168.101.130
+ IPADDR=$1
  NETMASK=255.255.255.0
  GATEWAY=192.168.101.2
 EOF
 service network restart
 
+echo turning off firewall
 systemctl set-default multi-user.target
 systemctl stop firewalld & systemctl disable firewalld
 swapoff -a
+
+echo installing docker
 yum install docker-ce -y
 
 sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
@@ -56,15 +60,16 @@ EOF
 sysctl -p
 
 
-#swap off
+echo swap off
 oldstr="/dev/mapper/centos-swap"
 newstr="#/dev/mapper/centos-swap"
 cat /etc/fstab | sed -n "s/$oldstr/$newstr/g;p"
 
-#yum install -y kubelet kubeadm kubectl kubernetes-cni
+echo install kubelet kubeadm kubectl kubernetes-cni
 yum install -y kubelet-1.20.6-0.x86_64 kubeadm-1.20.6-0.x86_64  kubectl-1.20.6-0.x86_64 
 systemctl enable kubelet && systemctl start kubelet
 systemctl start docker & systemctl enable docker
 docker pull quay.io/coreos/flannel:v0.11.0-amd64
 
+echo reboot
 reboot
