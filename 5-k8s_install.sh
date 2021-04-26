@@ -1,20 +1,4 @@
 #!/bin/sh
-echo building k8s on $1
-echo installing java from jdk-11_linux-x64_bin.tar.gz
-mkdir -p /usr/lib/jvm
-tar -zxvf jdk-11_linux-x64_bin.tar.gz -C /usr/lib/jvm
-cat <<EOF >  /etc/profile
-export JAVA_HOME=/usr/lib/jvm/jdk-11_linux
-export JRE_HOME=${JAVA_HOME}/jre
-export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
-export PATH=${JAVA_HOME}/bin:$PATH
-EOF
-source /etc/profile
-
-echo installing yum utils
-yum install -y yum-utils
-yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
-yum makecache
 
 echo fix static IP
 oldstr="dhcp"
@@ -24,7 +8,7 @@ cat /etc/sysconfig/network-scripts/ifcfg-ens33 | sed -n 's/ONBOOT="no"/ONBOOT="y
 cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-ens33
 IPADDR=$1
 NETMASK=255.255.255.0
-GATEWAY=192.168.101.2
+GATEWAY=$2
 EOF
 service network restart
 
