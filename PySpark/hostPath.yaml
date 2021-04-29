@@ -18,20 +18,21 @@ spec:
       serviceAccountName: spark
       containers:
       - name: my-notebook
-        image: 192.168.101.1:5000/custom-notebook
+        image: 192.168.101.1:5000/pyspark-notebook
+        image-pull-policy: Never
         ports:
           - containerPort: 8888
         volumeMounts:
           - mountPath: /root/data
-            name: my-notebook-pv
+            name: my-notebook
         workingDir: /root
         resources:
           limits:
             memory: 2Gi
       volumes:
-        - name: my-notebook-pv
-          persistentVolumeClaim:
-            claimName: my-notebook-pvc
+        - name: my-notebook
+          hostPath:
+            path: /root/host/data
 ---
 apiVersion: v1
 kind: Service

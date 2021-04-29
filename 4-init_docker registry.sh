@@ -1,12 +1,12 @@
 #!/bin/sh
 docker pull registry
 docker create -it registry /bin/bash
-docker run -d -p 5000:5000 -v /data/registry:/tmp/registry registry
+docker run -d -p 5000:5000 -v /tmp/registry registry
 docker ps -a
 # dockerd --debug
 cat <<EOF > /etc/docker/daemon.json 
 {
-  "insecure-registries": ["$1:5000"],
+  "insecure-registries": ["192.168.101.130:5000"],
   "registry-mirrors": ["https://5m9y9qbl.mirror.aliyuncs.com"]
 }
 EOF
