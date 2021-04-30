@@ -3,7 +3,7 @@
 tar -xvf spark-3.1.1-bin-hadoop3.2.tgz
 mkdir -p /usr/local/
 sudo mv spark-3.1.1-bin-hadoop3.2 /usr/local/
-sudo ln -s /usr/local/spark-3.1.1-bin-hadoop3.2/ /usr/local/spark
+sudo ln -s  /usr/local/spark-3.1.1-bin-hadoop3.2/  /usr/local/spark
 
 cat <<EOF > /etc/profile 
 export PATH="/root/kubernetes/cluster/ubuntu/binaries/:$PATH"

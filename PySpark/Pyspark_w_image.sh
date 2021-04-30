@@ -1,10 +1,13 @@
-#docker push 192.168.101.130:5000/spark-r:v1
+#为spark serviceaccount and role binding
 kubectl create namespace spark
-#为spark程序创建serviceaccount和对应的rbac
 kubectl create serviceaccount spark -n spark
-#kubectl delete serviceaccount spark
-
-#kubectl delete clusterrolebinding spark-role 
 kubectl create clusterrolebinding spark-role --clusterrole=edit --serviceaccount=default:spark --namespace=spark
 
-docker create -f hostPath.yaml
+# create pv and pvc
+docker create -f my-notebook-pv.yaml
+docker create -f my-notebook-pvc.yaml
+
+# pull image and create deployment
+docker create -f pyspark.yaml
+
+kubectl port-forward -n spark deployment.apps/my-notebook-deployment 8888:8888 --address 0.0.0.0 
