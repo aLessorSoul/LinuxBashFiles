@@ -8,6 +8,6 @@ docker create -f my-notebook-pv.yaml
 docker create -f my-notebook-pvc.yaml
 
 # pull image and create deployment
-docker create -f pyspark.yaml
+docker create -f pyspark*.yaml
 
 kubectl port-forward -n spark deployment.apps/my-notebook-deployment 8888:8888 --address 0.0.0.0 

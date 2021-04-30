@@ -18,7 +18,7 @@ spec:
       serviceAccountName: spark
       containers:
       - name: my-notebook
-        image: alessorsoul/pyspark-notebook:v1.1
+        image: alessorsoul/pyspark-notebook:v1.2
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8888
